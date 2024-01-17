@@ -5,7 +5,8 @@ import torch
 import os
 import os.path as osp
 import glob
-import urllib
+from urllib.request import urlretrieve
+import zipfile
 
 import open3d as o3d
 import numpy as np
@@ -39,7 +40,9 @@ class ShapenetDataset(InMemoryDataset):
         return ['training.pt', 'test.pt']
 
     def download(self):
-        (path, _) = urllib.urlretrieve(self.url, self.root / "raw.zip")
+        (path, _) = urlretrieve(self.url, self.root / "raw.zip")
+        with zipfile.ZipFile(path, 'r') as zip_ref:
+            zip_ref.extractall(self.raw_dir)
 
     # def process(self):
     #
